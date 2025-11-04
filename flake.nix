@@ -109,7 +109,7 @@
 
             src = ./.;
 
-            npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+            npmDepsHash = "sha256-N++U504rHEppJMvqXf7gWHpL0v5OWo7RX1CwVJcTvb4=";
 
             nodejs = nodejs;
 
