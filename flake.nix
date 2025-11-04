@@ -98,7 +98,8 @@
               "untagged-union"
               "uuid"
             ];
-            dir = ./bootstrap;  # PureScript sources are in bootstrap/src/
+            dir = ./.;  # Compile all PureScript from repo root
+            srcs = [ "bootstrap/src" "src" ];  # Both bootstrap and whine-runner sources
             compile = {
               compilerOptions = [ "--json-errors" ];
             };
