@@ -2,6 +2,17 @@
 set -e
 
 ROOT=$(dirname $(dirname ${BASH_SOURCE[0]}))
+
+echo "🔨 Pre-bundling whine-core for Nix-friendly builds..."
+
+# Pre-compile whine-core bundle
+cd $ROOT/bootstrap
+npx spago bundle --bundle-type module --outfile ../dist/whine-core-bundle.mjs 2>&1
+
+echo "✅ whine-core bundle created at dist/whine-core-bundle.mjs"
+cd $ROOT
+
+# Continue with existing build process
 npx esbuild $ROOT/output/Whine.Runner.Client.Main/index.js --bundle --outfile=$ROOT/dist/vscode-extension/extension.js --platform=node --format=cjs --external:vscode
 npx esbuild $ROOT/dist/npm/entryPoint.js --bundle --outfile=$ROOT/dist/npm/index.js --platform=node --format=cjs
 
