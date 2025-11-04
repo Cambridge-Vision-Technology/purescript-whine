@@ -94,7 +94,7 @@
               "typelevel-prelude"
               "untagged-union"
             ];
-            dir = ./.;
+            dir = ./bootstrap;  # PureScript sources are in bootstrap/src/
             compile = {
               compilerOptions = [ "--json-errors" ];
             };
