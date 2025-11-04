@@ -53,6 +53,7 @@
               "ansi"
               "arrays"
               "bifunctors"
+              "debug"
               "codec"
               "codec-json"
               "console"
@@ -74,6 +75,7 @@
               "maybe"
               "newtype"
               "node-buffer"
+              "node-execa"
               "node-fs"
               "node-path"
               "node-process"
@@ -86,6 +88,7 @@
               "profunctor"
               "record"
               "safe-coerce"
+              "simple-json"
               "strings"
               "stringutils"
               "transformers"
@@ -93,6 +96,7 @@
               "type-equality"
               "typelevel-prelude"
               "untagged-union"
+              "uuid"
             ];
             dir = ./bootstrap;  # PureScript sources are in bootstrap/src/
             compile = {
