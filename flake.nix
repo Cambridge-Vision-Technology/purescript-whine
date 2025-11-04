@@ -172,6 +172,9 @@
               # Copy whine-core bundle
               cp dist/whine-core-bundle.mjs $out/lib/whine/
 
+              # Copy node_modules (needed for external dependencies like uuid, execa)
+              cp -r node_modules $out/lib/whine/
+
               # Create wrapper script
               cat > $out/bin/whine << EOF
               #!/usr/bin/env bash
