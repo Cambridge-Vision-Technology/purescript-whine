@@ -109,13 +109,16 @@
 
             src = ./.;
 
-            npmDepsHash = "sha256-N++U504rHEppJMvqXf7gWHpL0v5OWo7RX1CwVJcTvb4=";
+            npmDepsHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
 
             nodejs = nodejs;
 
             # Use pre-built whine-core bundle (already committed to repo)
             # Building it requires specific npm versions of purescript/spago which need network access
             dontNpmBuild = true;
+
+            # Skip postinstall scripts that try to download purescript binary
+            npmFlags = [ "--ignore-scripts" ];
 
             nativeBuildInputs = with pkgs; [
               esbuild
