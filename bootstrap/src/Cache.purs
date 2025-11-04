@@ -7,6 +7,7 @@ module Whine.Bootstrap.Cache
 
 import Whine.Runner.Prelude
 
+import Whine.Bootstrap.ScriptDir as ScriptDir
 import Codec.JSON.DecodeError as DecodeError
 import Control.Monad.Reader (asks)
 import Data.DateTime (DateTime)
@@ -42,7 +43,8 @@ type Cache =
 -- | Check for pre-bundled whine-core (for Nix-friendly builds)
 getPreBundledWhineCoreCache :: RunnerM (Maybe Cache)
 getPreBundledWhineCoreCache = do
-  let bundlePath = "dist/whine-core-bundle.mjs"
+  -- Look for pre-bundled whine-core in the same directory as the whine script
+  let bundlePath = ScriptDir.getScriptDir <> "/whine-core-bundle.mjs"
   bundleExists <- FS.exists bundlePath
   if bundleExists
     then do
