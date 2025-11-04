@@ -25,12 +25,13 @@
 - [x] Update build scripts to pre-compile whine-core
 - [x] Update dist/bundle.sh to include bundled whine-core
 - [x] Update dist/npm/package.json to include whine-core-bundle.mjs
-- [ ] Test build locally
+- [x] Test build locally - whine-core-bundle.mjs created successfully (866KB)
 
-### ⬜ Phase 4: Nix Integration
-- [ ] Create `flake.nix` using purs-nix
-- [ ] Add `shell.nix` for backwards compatibility
-- [ ] Configure devShell with PureScript tooling
+### ✅ Phase 4: Nix Integration
+- [x] Create `flake.nix` using purs-nix
+- [x] Add `shell.nix` for backwards compatibility
+- [x] Configure devShell with PureScript tooling
+- [x] Generate flake.lock
 - [ ] Test Nix build
 
 ### ⬜ Phase 5: Integration Testing
