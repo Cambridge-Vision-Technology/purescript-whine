@@ -113,6 +113,10 @@
 
             nodejs = nodejs;
 
+            # Skip postinstall scripts that try to download purescript binary
+            # We provide purescript through Nix instead
+            npmInstallFlags = [ "--ignore-scripts" ];
+
             nativeBuildInputs = with pkgs; [
               purescript
               spago
