@@ -113,40 +113,33 @@
 
             nodejs = nodejs;
 
-            # Skip postinstall scripts that try to download purescript binary
-            # We provide purescript through Nix instead
-            npmFlags = [ "--ignore-scripts" ];
+            # Use pre-built whine-core bundle (already committed to repo)
+            # Building it requires specific npm versions of purescript/spago which need network access
+            dontNpmBuild = true;
 
             nativeBuildInputs = with pkgs; [
-              purescript
-              spago
               esbuild
             ];
 
             buildPhase = ''
               runHook preBuild
 
-              # Copy PureScript output
-              echo "📦 Copying PureScript output..."
-              mkdir -p output
-              cp -r ${ps.output {}}/* output/
+              # whine-core-bundle.mjs is already pre-built and committed to dist/
+              echo "📦 Using pre-built whine-core bundle from dist/whine-core-bundle.mjs"
 
-              # Build whine-core bundle (from bootstrap package)
-              echo "🔨 Building whine-core bundle..."
-              cd bootstrap
-              npx spago bundle --bundle-type module --outfile ../dist/whine-core-bundle.mjs
+              if [ ! -f "dist/whine-core-bundle.mjs" ]; then
+                echo "❌ ERROR: Pre-built whine-core bundle not found!"
+                echo "Run 'npm run build && bash dist/bundle.sh' locally to generate it"
+                exit 1
+              fi
 
-              cd ..
-              echo "✅ whine-core bundle created"
-
-              # Build bootstrap main
-              cd bootstrap
-              npx spago build
-              npx spago bundle --bundle-type module --outfile index.mjs
-              cd ..
-
-              # Bundle the entrypoint
-              npx esbuild dist/npm/entryPoint.js --bundle --outfile=dist/npm/index.js --platform=node --format=cjs
+              # Bundle the CLI entrypoint with esbuild
+              echo "🔨 Bundling whine CLI entrypoint..."
+              npx esbuild dist/npm/entryPoint.js \
+                --bundle \
+                --platform=node \
+                --format=cjs \
+                --outfile=dist/npm/index.js
 
               runHook postBuild
             '';
