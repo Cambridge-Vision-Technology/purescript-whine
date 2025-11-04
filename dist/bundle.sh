@@ -7,8 +7,9 @@ echo "🔨 Pre-bundling whine-core for Nix-friendly builds..."
 
 # Pre-compile whine-core bundle
 # Use 'app' bundle type so it calls main() instead of just exporting it
+# Bundle the WhineCoreMain module which only contains the whine-core rules runner
 cd $ROOT/bootstrap
-npx spago bundle --bundle-type app --outfile ../dist/whine-core-bundle.mjs 2>&1
+npx spago bundle --bundle-type app --module Whine.Bootstrap.WhineCoreMain --outfile ../dist/whine-core-bundle.mjs 2>&1
 
 echo "✅ whine-core bundle created at dist/whine-core-bundle.mjs"
 cd $ROOT

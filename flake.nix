@@ -169,8 +169,9 @@
               # Copy dist/npm contents
               cp -r dist/npm/* $out/lib/whine/
 
-              # Copy whine-core bundle
+              # Copy whine-core bundle and make it executable
               cp dist/whine-core-bundle.mjs $out/lib/whine/
+              chmod +x $out/lib/whine/whine-core-bundle.mjs
 
               # Copy node_modules (needed for external dependencies like uuid, execa)
               cp -r node_modules $out/lib/whine/
