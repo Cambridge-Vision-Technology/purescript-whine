@@ -152,6 +152,8 @@
                 --bundle \
                 --platform=node \
                 --format=cjs \
+                --external:uuid \
+                --external:execa \
                 --outfile=dist/npm/index.js
 
               runHook postBuild
