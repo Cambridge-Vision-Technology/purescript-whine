@@ -44,7 +44,8 @@ type Cache =
 getPreBundledWhineCoreCache :: RunnerM (Maybe Cache)
 getPreBundledWhineCoreCache = do
   -- Look for pre-bundled whine-core in the same directory as the whine script
-  let bundlePath = ScriptDir.getScriptDir <> "/whine-core-bundle.mjs"
+  scriptDir <- liftEffect ScriptDir.getScriptDir
+  let bundlePath = scriptDir <> "/whine-core-bundle.mjs"
   bundleExists <- FS.exists bundlePath
   if bundleExists
     then do

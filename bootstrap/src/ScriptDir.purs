@@ -1,3 +1,5 @@
 module Whine.Bootstrap.ScriptDir where
 
-foreign import getScriptDir :: String
+import Effect (Effect)
+
+foreign import getScriptDir :: Effect String
