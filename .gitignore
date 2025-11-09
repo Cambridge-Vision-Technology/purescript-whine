@@ -6,3 +6,6 @@ output/
 .psci_modules/
 .whine/
 .spec-results
+.DS_Store
+result
+result/

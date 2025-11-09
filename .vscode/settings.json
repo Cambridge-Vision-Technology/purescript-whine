@@ -1,3 +1,22 @@
 {
-  "whine.trace.server": "verbose"
+  "whine.trace.server": "verbose",
+  "workbench.colorCustomizations": {
+    "activityBar.activeBackground": "#fed19e",
+    "activityBar.background": "#fed19e",
+    "activityBar.foreground": "#15202b",
+    "activityBar.inactiveForeground": "#15202b99",
+    "activityBarBadge.background": "#029e55",
+    "activityBarBadge.foreground": "#e7e7e7",
+    "commandCenter.border": "#15202b99",
+    "sash.hoverBorder": "#fed19e",
+    "statusBar.background": "#feb96b",
+    "statusBar.foreground": "#15202b",
+    "statusBarItem.hoverBackground": "#fea138",
+    "statusBarItem.remoteBackground": "#feb96b",
+    "statusBarItem.remoteForeground": "#15202b",
+    "titleBar.activeBackground": "#feb96b",
+    "titleBar.activeForeground": "#15202b",
+    "titleBar.inactiveBackground": "#feb96b99",
+    "titleBar.inactiveForeground": "#15202b99"
+  }
 }
