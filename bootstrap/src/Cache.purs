@@ -7,6 +7,7 @@ module Whine.Bootstrap.Cache
 
 import Whine.Runner.Prelude
 
+import Whine.Bootstrap.ScriptDir as ScriptDir
 import Codec.JSON.DecodeError as DecodeError
 import Control.Monad.Reader (asks)
 import Data.DateTime (DateTime)
@@ -39,8 +40,42 @@ type Cache =
   , rebuild :: RunnerM Unit
   }
 
+-- | Check for pre-bundled whine-core (for Nix-friendly builds)
+getPreBundledWhineCoreCache :: RunnerM (Maybe Cache)
+getPreBundledWhineCoreCache = do
+  -- Look for pre-bundled whine-core in the same directory as the whine script
+  scriptDir <- liftEffect ScriptDir.getScriptDir
+  let bundlePath = scriptDir <> "/whine-core-bundle.mjs"
+  bundleExists <- FS.exists bundlePath
+  if bundleExists
+    then do
+      logDebug $ "Found pre-bundled whine-core at " <> bundlePath
+      pure $ Just
+        { executable: bundlePath
+        , dependencies: Nothing
+        , dirty: false
+        , rebuild: pure unit  -- No rebuild needed for pre-bundled version
+        }
+    else pure Nothing
+
 getCache :: { rulePackages :: Map { package :: String } PackageSpec } -> RunnerM Cache
 getCache { rulePackages } = do
+  -- Check if we're only using whine-core (no custom packages)
+  let isOnlyWhineCore = Map.size rulePackages == 1
+                     && Map.member { package: "whine-core" } rulePackages
+
+  -- Try to use pre-bundled whine-core if available (Nix-friendly)
+  if isOnlyWhineCore
+    then do
+      mPreBundled <- getPreBundledWhineCoreCache
+      case mPreBundled of
+        Just cache -> pure cache
+        Nothing -> buildRuntimeCache { rulePackages }  -- Fallback to runtime compilation
+    else buildRuntimeCache { rulePackages }
+
+-- | Build cache at runtime (original behavior)
+buildRuntimeCache :: { rulePackages :: Map { package :: String } PackageSpec } -> RunnerM Cache
+buildRuntimeCache { rulePackages } = do
   dependencies <- readSourceMapFile <#> map \{ sources } ->
     sources
     # filter (not ignoredDependency)

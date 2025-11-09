@@ -2,8 +2,26 @@
 set -e
 
 ROOT=$(dirname $(dirname ${BASH_SOURCE[0]}))
-npx esbuild $ROOT/output/Whine.Runner.Client.Main/index.js --bundle --outfile=$ROOT/dist/vscode-extension/extension.js --platform=node --format=cjs --external:vscode
-npx esbuild $ROOT/dist/npm/entryPoint.js --bundle --outfile=$ROOT/dist/npm/index.js --platform=node --format=cjs
+
+echo "🔨 Pre-bundling whine-core for Nix-friendly builds..."
+
+# Pre-compile whine-core bundle
+# Use 'app' bundle type so it calls main() instead of just exporting it
+# Bundle the WhineCoreMain module which only contains the whine-core rules runner
+cd $ROOT/bootstrap
+npx spago bundle --bundle-type app --module Whine.Bootstrap.WhineCoreMain --outfile ../dist/whine-core-bundle.mjs 2>&1
+
+echo "✅ whine-core bundle created at dist/whine-core-bundle.mjs"
+cd $ROOT
+
+# Continue with existing build process (only if output directory exists)
+if [ -d "$ROOT/output/Whine.Runner.Client.Main" ]; then
+  npx esbuild $ROOT/output/Whine.Runner.Client.Main/index.js --bundle --outfile=$ROOT/dist/vscode-extension/extension.js --platform=node --format=cjs --external:vscode
+  npx esbuild $ROOT/dist/npm/entryPoint.js --bundle --outfile=$ROOT/dist/npm/index.js --platform=node --format=cjs
+else
+  echo "⚠️  Skipping VSCode extension bundle (output directory not found)"
+  echo "   Run 'npx spago build' at the root before running this script for full build"
+fi
 
 version=$($ROOT/dist/npm/index.js --version)
 description="PureScript linter, extensible, with configurable rules, and one-off escape hatches"
