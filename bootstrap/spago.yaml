@@ -19,6 +19,7 @@ package:
     - stringutils
     - uuid
     - whine-core
+    - oz-rules
   run:
     main: Whine.Bootstrap.Main
   bundle:

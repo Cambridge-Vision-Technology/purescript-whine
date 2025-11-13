@@ -59,4 +59,6 @@ package:
 workspace:
   packageSet:
     registry: 62.2.5
-  extraPackages: {}
+  extraPackages:
+    oz-rules:
+      path: ./oz-rules

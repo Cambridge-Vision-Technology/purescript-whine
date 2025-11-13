@@ -58,20 +58,58 @@ getPreBundledWhineCoreCache = do
         }
     else pure Nothing
 
-getCache :: { rulePackages :: Map { package :: String } PackageSpec } -> RunnerM Cache
-getCache { rulePackages } = do
-  -- Check if we're only using whine-core (no custom packages)
+-- | Check for pre-bundled cache (whine-core-only or custom packages)
+-- | For custom packages, looks for bundle-<hash>.mjs or bundle-local-rules.mjs in script directory
+getPreBundledCache :: { rulePackages :: Map { package :: String } PackageSpec } -> RunnerM (Maybe Cache)
+getPreBundledCache { rulePackages } = do
   let isOnlyWhineCore = Map.size rulePackages == 1
                      && Map.member { package: "whine-core" } rulePackages
 
-  -- Try to use pre-bundled whine-core if available (Nix-friendly)
   if isOnlyWhineCore
-    then do
-      mPreBundled <- getPreBundledWhineCoreCache
-      case mPreBundled of
-        Just cache -> pure cache
-        Nothing -> buildRuntimeCache { rulePackages }  -- Fallback to runtime compilation
-    else buildRuntimeCache { rulePackages }
+    then getPreBundledWhineCoreCache  -- Use whine-core-bundle.mjs
+    else do
+      scriptDir <- liftEffect ScriptDir.getScriptDir
+
+      -- First try: Look for bundle-<hash>.mjs (most specific)
+      let configHash = hashConfig { rulePackages }
+          bundleFile = "bundle-" <> configHash <> ".mjs"
+          bundlePath = scriptDir <> "/" <> bundleFile
+
+      bundleExists <- FS.exists bundlePath
+      if bundleExists
+        then do
+          logDebug $ "Found pre-bundled package cache at " <> bundlePath
+          pure $ Just
+            { executable: bundlePath
+            , dependencies: Nothing
+            , dirty: false
+            , rebuild: pure unit  -- No rebuild needed for pre-bundled version
+            }
+        else do
+          -- Second try: Look for bundle-local-rules.mjs (Nix-friendly fallback)
+          let fallbackBundlePath = scriptDir <> "/bundle-local-rules.mjs"
+          fallbackExists <- FS.exists fallbackBundlePath
+          if fallbackExists
+            then do
+              logDebug $ "Found pre-bundled local rules at " <> fallbackBundlePath
+              pure $ Just
+                { executable: fallbackBundlePath
+                , dependencies: Nothing
+                , dirty: false
+                , rebuild: pure unit  -- No rebuild needed for pre-bundled version
+                }
+            else do
+              logDebug $ "No pre-bundled cache found, will compile at runtime"
+              pure Nothing
+
+getCache :: { rulePackages :: Map { package :: String } PackageSpec } -> RunnerM Cache
+getCache { rulePackages } = do
+  -- Try to use pre-bundled version (Nix-friendly)
+  -- This checks for both whine-core-only and pre-bundled custom packages
+  mPreBundled <- getPreBundledCache { rulePackages }
+  case mPreBundled of
+    Just cache -> pure cache
+    Nothing -> buildRuntimeCache { rulePackages }  -- Fallback to runtime compilation
 
 -- | Build cache at runtime (original behavior)
 buildRuntimeCache :: { rulePackages :: Map { package :: String } PackageSpec } -> RunnerM Cache

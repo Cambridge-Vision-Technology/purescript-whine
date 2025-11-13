@@ -99,7 +99,7 @@
               "uuid"
             ];
             dir = ./.;  # Compile all PureScript from repo root
-            srcs = [ "bootstrap/src" "bootstrap/src-generated" "src" ];  # Bootstrap, generated stubs, and whine-runner
+            srcs = [ "bootstrap/src" "bootstrap/src-generated" "src" "oz-rules/src" ];  # Bootstrap, generated stubs, whine-runner, and oz-rules
             compile = {
               compilerOptions = [ "--json-errors" ];
             };
@@ -134,8 +134,8 @@
 
               # Copy PureScript output from purs-nix (for the CLI entrypoint)
               echo "📦 Copying PureScript output from purs-nix..."
-              mkdir -p output
-              cp -r ${ps.output {}}/* output/
+              rm -rf output
+              cp -r ${ps.output {}} output
 
               # whine-core-bundle.mjs is already pre-built and committed to dist/
               echo "📦 Using pre-built whine-core bundle from dist/whine-core-bundle.mjs"

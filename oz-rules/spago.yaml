@@ -1,0 +1,14 @@
+package:
+  name: ps-extract-whine-rules
+  dependencies:
+    - whine-core
+    - prelude
+    - language-cst-parser
+    - codec-json
+    - maybe
+    - either
+    - foldable-traversable
+    - tuples
+    - arrays
+    - ordered-collections
+    - strings
