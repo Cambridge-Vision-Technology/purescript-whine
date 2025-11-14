@@ -110,7 +110,7 @@
           # JavaScript build using buildNpmPackage
           whine-build = pkgs.buildNpmPackage {
             pname = "whine";
-            version = "0.0.33-nix";
+            version = "0.0.34-nix";
 
             src = ./.;
 
@@ -180,9 +180,9 @@
               # Copy node_modules (needed for external dependencies like uuid, execa)
               cp -r node_modules $out/lib/whine/
 
-              # Create wrapper script
+              # Create wrapper script with proper shebang and runtime path
               cat > $out/bin/whine << EOF
-              #!/usr/bin/env bash
+              #!${pkgs.bash}/bin/bash
               exec ${nodejs}/bin/node $out/lib/whine/index.js "\$@"
               EOF
               chmod +x $out/bin/whine
