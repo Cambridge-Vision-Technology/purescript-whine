@@ -110,7 +110,7 @@
           # JavaScript build using buildNpmPackage
           whine-build = pkgs.buildNpmPackage {
             pname = "whine";
-            version = "0.0.32-nix";
+            version = "0.0.33-nix";
 
             src = ./.;
 
@@ -155,6 +155,10 @@
                 --external:uuid \
                 --external:execa \
                 --outfile=dist/npm/index.js
+
+              # Remove shebang from bundled file (wrapper script provides node interpreter)
+              echo "🔧 Removing shebang from bundled index.js..."
+              sed -i '1{/^#!/d;}' dist/npm/index.js
 
               runHook postBuild
             '';
