@@ -1,5 +1,5 @@
 package:
-  name: ps-extract-whine-rules
+  name: aykua
   dependencies:
     - whine-core
     - prelude

@@ -19,7 +19,8 @@ package:
     - stringutils
     - uuid
     - whine-core
-    - oz-rules
+    - aykua
+    - oz
   run:
     main: Whine.Bootstrap.Main
   bundle:

@@ -1,12 +1,128 @@
 {
   "workspace": {
     "packages": {
+      "aykua": {
+        "path": "aykua",
+        "core": {
+          "dependencies": [
+            "arrays",
+            "codec-json",
+            "either",
+            "foldable-traversable",
+            "language-cst-parser",
+            "maybe",
+            "ordered-collections",
+            "prelude",
+            "strings",
+            "tuples",
+            "whine-core"
+          ],
+          "build_plan": [
+            "aff",
+            "aff-promise",
+            "ansi",
+            "argonaut-core",
+            "arraybuffer-types",
+            "arrays",
+            "assert",
+            "bifunctors",
+            "catenable-lists",
+            "codec",
+            "codec-json",
+            "console",
+            "const",
+            "contravariant",
+            "control",
+            "datetime",
+            "debug",
+            "distributive",
+            "effect",
+            "either",
+            "elmish",
+            "enums",
+            "exceptions",
+            "exists",
+            "exitcodes",
+            "fixed-points",
+            "foldable-traversable",
+            "foreign",
+            "foreign-object",
+            "formatters",
+            "free",
+            "functions",
+            "functors",
+            "gen",
+            "identity",
+            "integers",
+            "invariant",
+            "js-date",
+            "json",
+            "language-cst-parser",
+            "lazy",
+            "lists",
+            "literals",
+            "maybe",
+            "media-types",
+            "newtype",
+            "node-buffer",
+            "node-event-emitter",
+            "node-fs",
+            "node-path",
+            "node-process",
+            "node-streams",
+            "nonempty",
+            "now",
+            "nullable",
+            "numbers",
+            "open-memoize",
+            "optparse",
+            "ordered-collections",
+            "orders",
+            "parallel",
+            "parsing",
+            "partial",
+            "posix-types",
+            "prelude",
+            "profunctor",
+            "psci-support",
+            "random",
+            "record",
+            "refs",
+            "safe-coerce",
+            "st",
+            "strings",
+            "stringutils",
+            "tailrec",
+            "transformers",
+            "tuples",
+            "type-equality",
+            "typelevel-prelude",
+            "undefined-is-not-a-problem",
+            "unfoldable",
+            "unicode",
+            "unsafe-coerce",
+            "untagged-union",
+            "variant",
+            "web-dom",
+            "web-events",
+            "web-file",
+            "web-html",
+            "web-storage",
+            "whine-core"
+          ]
+        },
+        "test": {
+          "dependencies": [],
+          "build_plan": []
+        }
+      },
       "bootstrap": {
         "path": "bootstrap",
         "core": {
           "dependencies": [
             "ansi",
             "arrays",
+            "aykua",
             "console",
             "debug",
             "effect",
@@ -17,7 +133,7 @@
             "node-fs",
             "node-process",
             "optparse",
-            "oz-rules",
+            "oz",
             "prelude",
             "record",
             "simple-json",
@@ -34,6 +150,7 @@
             "arrays",
             "assert",
             "avar",
+            "aykua",
             "bifunctors",
             "catenable-lists",
             "codec",
@@ -94,7 +211,7 @@
             "optparse",
             "ordered-collections",
             "orders",
-            "oz-rules",
+            "oz",
             "parallel",
             "parsing",
             "partial",
@@ -138,8 +255,8 @@
           "build_plan": []
         }
       },
-      "ps-extract-whine-rules": {
-        "path": "oz-rules",
+      "oz": {
+        "path": "oz",
         "core": {
           "dependencies": [
             "arrays",
@@ -1197,11 +1314,7 @@
         "zipperarray": "2.0.0"
       }
     },
-    "extra_packages": {
-      "oz-rules": {
-        "path": "./oz-rules"
-      }
-    }
+    "extra_packages": {}
   },
   "packages": {
     "aff": {
@@ -2209,23 +2322,6 @@
       "dependencies": [
         "newtype",
         "prelude"
-      ]
-    },
-    "oz-rules": {
-      "type": "local",
-      "path": "./oz-rules",
-      "dependencies": [
-        "arrays",
-        "codec-json",
-        "either",
-        "foldable-traversable",
-        "language-cst-parser",
-        "maybe",
-        "ordered-collections",
-        "prelude",
-        "strings",
-        "tuples",
-        "whine-core"
       ]
     },
     "parallel": {

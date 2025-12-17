@@ -1,4 +1,6 @@
-module PSExtract.WhineRules where
+-- | Aykua company-wide whine rules
+-- | These rules apply to all Aykua projects
+module Aykua.WhineRules where
 
 import Whine.Prelude
 
@@ -6,14 +8,21 @@ import Data.Array.NonEmpty as Data.Array.NonEmpty
 import Data.Codec.JSON as CJ
 import Data.Foldable (all) as Data.Foldable
 import PureScript.CST.Types (Import(..), ImportDecl(..), Module(..), ModuleHeader(..), ModuleName(..), Name(..), Separated(..), Wrapped(..))
+import Whine.Core.UndesirableFunctions as UF
 import Whine.Types (Handle(..), Rule, RuleFactories, emptyRule, reportViolation, ruleFactory)
 
 -- | Export all rules for this package
 rules :: RuleFactories
 rules =
+  -- Import standard rules
   [ ruleFactory "QualifiedImportsOnly" CJ.json qualifiedImportsOnlyRule
   , ruleFactory "MatchingAliases" CJ.json matchingAliasesRule
   , ruleFactory "NoDuplicateImports" CJ.json noDuplicateImportsRule
+  -- Granular UndesirableFunctions variants - each can be disabled independently
+  -- Use: -- #disable UndesirableConsole (instead of disabling all UndesirableFunctions)
+  , ruleFactory "UndesirableConsole" UF.codec UF.rule     -- Effect.Console.* functions
+  , ruleFactory "UndesirableLiftEffect" UF.codec UF.rule  -- liftEffect/liftAff
+  , ruleFactory "UndesirableUnsafe" UF.codec UF.rule      -- Unsafe functions (never allow)
   ]
 
 -- | Rule: All imports must be qualified (except Prelude and symbol-only imports)

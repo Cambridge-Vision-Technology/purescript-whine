@@ -99,7 +99,7 @@
               "uuid"
             ];
             dir = ./.;  # Compile all PureScript from repo root
-            srcs = [ "bootstrap/src" "bootstrap/src-generated" "src" "oz-rules/src" ];  # Bootstrap, generated stubs, whine-runner, and oz-rules
+            srcs = [ "bootstrap/src" "bootstrap/src-generated" "src" "aykua/src" "oz/src" ];  # Bootstrap, generated stubs, whine-runner, aykua, and oz
             compile = {
               compilerOptions = [ "--json-errors" ];
             };
