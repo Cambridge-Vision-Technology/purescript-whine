@@ -7,6 +7,7 @@ import Whine.Core.CaseBranchIndentation as CaseBranchIndentation
 import Whine.Core.CommaFirstArrays as CommaFirstArrays
 import Whine.Core.CommaFirstRecords as CommaFirstRecords
 import Whine.Core.FunctionComplexity as FunctionComplexity
+import Whine.Core.NoStringComparison as NoStringComparison
 import Whine.Core.UndesirableFunctions as UndesirableFunctions
 import Whine.Core.UndesirableModules as UndesirableModules
 import Whine.Types (RuleFactories, ruleFactory)
@@ -20,4 +21,5 @@ rules =
   , ruleFactory "CommaFirstRecords" CJ.json CommaFirstRecords.rule
   , ruleFactory "CaseBranchIndentation" CJ.json CaseBranchIndentation.rule
   , ruleFactory "FunctionComplexity" FunctionComplexity.codec FunctionComplexity.rule
+  , ruleFactory "NoStringComparison" CJ.json NoStringComparison.rule
   ]
