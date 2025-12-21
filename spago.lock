@@ -605,7 +605,11 @@
         },
         "test": {
           "dependencies": [
-            "spec-node"
+            "node-child-process",
+            "node-execa",
+            "node-os",
+            "spec-node",
+            "uuid"
           ],
           "build_plan": [
             "aff",
@@ -641,14 +645,19 @@
             "integers",
             "invariant",
             "js-date",
+            "js-timers",
             "lazy",
             "lists",
             "maybe",
             "mmorph",
             "newtype",
             "node-buffer",
+            "node-child-process",
             "node-event-emitter",
+            "node-execa",
             "node-fs",
+            "node-human-signals",
+            "node-os",
             "node-path",
             "node-process",
             "node-streams",
@@ -661,6 +670,7 @@
             "ordered-collections",
             "orders",
             "parallel",
+            "parsing",
             "partial",
             "pipes",
             "posix-types",
@@ -679,7 +689,10 @@
             "type-equality",
             "typelevel-prelude",
             "unfoldable",
-            "unsafe-coerce"
+            "unicode",
+            "unsafe-coerce",
+            "unsafe-reference",
+            "uuid"
           ]
         }
       },

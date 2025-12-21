@@ -49,7 +49,11 @@ package:
   test:
     main: Test.Main
     dependencies:
+      - node-child-process
+      - node-execa
+      - node-os
       - spec-node
+      - uuid
   publish:
     version: 0.0.31
     license: MIT
