@@ -5,6 +5,7 @@ import Test.Prelude
 import Test.Core.CaseBranchIndentation as CaseBranchIndentation
 import Test.Core.CommaFirstArrays as CommaFirstArrays
 import Test.Core.CommaFirstRecords as CommaFirstRecords
+import Test.Core.FunctionComplexity as FunctionComplexity
 import Test.Core.UndesirableFunctions as UndesirableFunctions
 import Test.Core.UndesirableModules as UndesirableModules
 import Test.Spec (Spec, describe)
@@ -14,5 +15,6 @@ spec = describe "Core.WhineRules" do
   CommaFirstArrays.spec
   CommaFirstRecords.spec
   CaseBranchIndentation.spec
+  FunctionComplexity.spec
   UndesirableModules.spec
   UndesirableFunctions.spec
