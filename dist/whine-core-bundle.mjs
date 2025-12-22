@@ -32329,23 +32329,6 @@ var rule5 = function(config2) {
 // output/Whine.Core.NoStringComparison/index.js
 var unwrap8 = /* @__PURE__ */ unwrap();
 var rule6 = function(v) {
-  var onBinder = function(dictMonadRules) {
-    var MonadReport3 = dictMonadRules.MonadReport3();
-    var reportViolation2 = reportViolation(MonadReport3);
-    var pure34 = pure(MonadReport3.Monad0().Applicative0());
-    return function(dictRangeOf) {
-      return function(v1) {
-        if (v1 instanceof BinderString) {
-          return reportViolation2({
-            source: new Just(v1.value0.range),
-            message: "String comparison detected. Consider using an ADT for type-safe pattern matching."
-          });
-        }
-        ;
-        return pure34(unit);
-      };
-    };
-  };
   var isStringExpr = function($copy_v1) {
     var $tco_done = false;
     var $tco_result;
@@ -32370,6 +32353,35 @@ var rule6 = function(v) {
     ;
     return $tco_result;
   };
+  var isRecordAccessor = function($copy_v1) {
+    var $tco_done1 = false;
+    var $tco_result;
+    function $tco_loop(v1) {
+      if (v1 instanceof ExprRecordAccessor) {
+        $tco_done1 = true;
+        return true;
+      }
+      ;
+      if (v1 instanceof ExprParens) {
+        $copy_v1 = v1.value0.value;
+        return;
+      }
+      ;
+      $tco_done1 = true;
+      return false;
+    }
+    ;
+    while (!$tco_done1) {
+      $tco_result = $tco_loop($copy_v1);
+    }
+    ;
+    return $tco_result;
+  };
+  var isRecordFieldStringComparison = function(left) {
+    return function(right) {
+      return isRecordAccessor(left) && isStringExpr(right) || isStringExpr(left) && isRecordAccessor(right);
+    };
+  };
   var onExpr = function(dictMonadRules) {
     var MonadReport3 = dictMonadRules.MonadReport3();
     var Applicative0 = MonadReport3.Monad0().Applicative0();
@@ -32383,9 +32395,9 @@ var rule6 = function(v) {
         if (v1 instanceof ExprOp) {
           return for_2(toArray(v1.value1))(function(v2) {
             var v3 = unwrap8(v2.value0).name;
-            return when5(v3 === "==" || v3 === "/=")(when5(isStringExpr(v1.value0) || isStringExpr(v2.value1))(reportViolation2({
+            return when5(v3 === "==" || v3 === "/=")(when5(isRecordFieldStringComparison(v1.value0)(v2.value1))(reportViolation2({
               source: unionManyRanges([rangeOf7(v1.value0), rangeOf7(v2.value1)]),
-              message: "String comparison detected. Consider using an ADT for type-safe pattern matching."
+              message: "String comparison on record field detected. Consider using an ADT for type-safe pattern matching."
             })));
           });
         }
@@ -32399,8 +32411,8 @@ var rule6 = function(v) {
     onModuleImport: emptyRule.onModuleImport,
     onModuleExport: emptyRule.onModuleExport,
     onDecl: emptyRule.onDecl,
+    onBinder: emptyRule.onBinder,
     onType: emptyRule.onType,
-    onBinder,
     onExpr
   };
 };

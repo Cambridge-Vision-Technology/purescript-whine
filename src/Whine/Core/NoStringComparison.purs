@@ -1,23 +1,17 @@
--- | Detects string literal comparisons in case statements and guards,
--- | which often indicate that an ADT (Algebraic Data Type) should be used instead.
+-- | Detects string comparisons on record fields, which often indicate
+-- | that the field should be an ADT instead of a String.
 -- |
--- | String comparisons in pattern matching are a code smell:
--- |     -- Anti-pattern:
--- |     case status of
--- |       "pending" -> handlePending
--- |       "completed" -> handleCompleted
--- |       _ -> handleUnknown
+-- | This rule specifically targets:
+-- |     record.field == "value"  -- field should be an ADT!
+-- |     record.field /= "value"
 -- |
--- |     -- Also problematic:
--- |     if status == "active" then ...
--- |     | item.type == "document" = ...
+-- | It does NOT flag boundary parsing patterns like:
+-- |     case externalString of
+-- |       "pending" -> Just Pending  -- legitimate parsing
 -- |
--- |     -- Preferred:
--- |     data Status = Pending | Completed | Failed
--- |     case status of
--- |       Pending -> handlePending
--- |       Completed -> handleCompleted
--- |       Failed -> handleFailed
+-- | The distinction is:
+-- | - Record field access suggests internal data that should be typed
+-- | - Case patterns on variables suggest parsing external strings
 -- |
 module Whine.Core.NoStringComparison where
 
@@ -25,26 +19,16 @@ import Whine.Prelude
 
 import Data.Array.NonEmpty as NEA
 import PureScript.CST.Range (rangeOf)
-import PureScript.CST.Types (Binder(..), Expr(..), Operator(..), Wrapped(..))
+import PureScript.CST.Types (Expr(..), Operator(..), RecordAccessor(..), Wrapped(..))
 import Whine.Types (Handle(..), Rule, emptyRule, reportViolation)
 
 rule :: JSON -> Rule
 rule _ = emptyRule
-  { onBinder = onBinder
-  , onExpr = onExpr
+  { onExpr = onExpr
   }
   where
     violationMessage :: String
-    violationMessage = "String comparison detected. Consider using an ADT for type-safe pattern matching."
-
-    onBinder :: Handle Binder
-    onBinder = Handle case _ of
-      BinderString token _ ->
-        reportViolation
-          { source: Just token.range
-          , message: violationMessage
-          }
-      _ -> pure unit
+    violationMessage = "String comparison on record field detected. Consider using an ADT for type-safe pattern matching."
 
     onExpr :: Handle Expr
     onExpr = Handle case _ of
@@ -54,12 +38,24 @@ rule _ = emptyRule
             Operator opName = (unwrap qualifiedOp).name
           in
             when (opName == "==" || opName == "/=") $
-              when (isStringExpr leftExpr || isStringExpr rightExpr) $
+              when (isRecordFieldStringComparison leftExpr rightExpr) $
                 reportViolation
                   { source: unionManyRanges [rangeOf leftExpr, rangeOf rightExpr]
                   , message: violationMessage
                   }
       _ -> pure unit
+
+    -- Check if this is record.field == "string" or "string" == record.field
+    isRecordFieldStringComparison :: forall e. Expr e -> Expr e -> Boolean
+    isRecordFieldStringComparison left right =
+      (isRecordAccessor left && isStringExpr right)
+        || (isStringExpr left && isRecordAccessor right)
+
+    isRecordAccessor :: forall e. Expr e -> Boolean
+    isRecordAccessor = case _ of
+      ExprRecordAccessor _ -> true
+      ExprParens (Wrapped { value }) -> isRecordAccessor value
+      _ -> false
 
     isStringExpr :: forall e. Expr e -> Boolean
     isStringExpr = case _ of
