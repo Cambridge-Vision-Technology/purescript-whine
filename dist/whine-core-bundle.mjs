@@ -32326,12 +32326,91 @@ var rule5 = function(config2) {
   };
 };
 
+// output/Whine.Core.NoStringComparison/index.js
+var unwrap8 = /* @__PURE__ */ unwrap();
+var rule6 = function(v) {
+  var onBinder = function(dictMonadRules) {
+    var MonadReport3 = dictMonadRules.MonadReport3();
+    var reportViolation2 = reportViolation(MonadReport3);
+    var pure34 = pure(MonadReport3.Monad0().Applicative0());
+    return function(dictRangeOf) {
+      return function(v1) {
+        if (v1 instanceof BinderString) {
+          return reportViolation2({
+            source: new Just(v1.value0.range),
+            message: "String comparison detected. Consider using an ADT for type-safe pattern matching."
+          });
+        }
+        ;
+        return pure34(unit);
+      };
+    };
+  };
+  var isStringExpr = function($copy_v1) {
+    var $tco_done = false;
+    var $tco_result;
+    function $tco_loop(v1) {
+      if (v1 instanceof ExprString) {
+        $tco_done = true;
+        return true;
+      }
+      ;
+      if (v1 instanceof ExprParens) {
+        $copy_v1 = v1.value0.value;
+        return;
+      }
+      ;
+      $tco_done = true;
+      return false;
+    }
+    ;
+    while (!$tco_done) {
+      $tco_result = $tco_loop($copy_v1);
+    }
+    ;
+    return $tco_result;
+  };
+  var onExpr = function(dictMonadRules) {
+    var MonadReport3 = dictMonadRules.MonadReport3();
+    var Applicative0 = MonadReport3.Monad0().Applicative0();
+    var for_2 = for_(Applicative0)(foldableArray);
+    var when5 = when(Applicative0);
+    var reportViolation2 = reportViolation(MonadReport3);
+    var pure34 = pure(Applicative0);
+    return function(dictRangeOf) {
+      var rangeOf7 = rangeOf(rangeOfExpr(dictRangeOf));
+      return function(v1) {
+        if (v1 instanceof ExprOp) {
+          return for_2(toArray(v1.value1))(function(v2) {
+            var v3 = unwrap8(v2.value0).name;
+            return when5(v3 === "==" || v3 === "/=")(when5(isStringExpr(v1.value0) || isStringExpr(v2.value1))(reportViolation2({
+              source: unionManyRanges([rangeOf7(v1.value0), rangeOf7(v2.value1)]),
+              message: "String comparison detected. Consider using an ADT for type-safe pattern matching."
+            })));
+          });
+        }
+        ;
+        return pure34(unit);
+      };
+    };
+  };
+  return {
+    onModule: emptyRule.onModule,
+    onModuleImport: emptyRule.onModuleImport,
+    onModuleExport: emptyRule.onModuleExport,
+    onDecl: emptyRule.onDecl,
+    onType: emptyRule.onType,
+    onBinder,
+    onExpr
+  };
+};
+
 // output/Whine.Core.UndesirableModules/index.js
 var lookup5 = /* @__PURE__ */ lookup3(ordModuleName);
 var map24 = /* @__PURE__ */ map(functorArray);
 var lmap3 = /* @__PURE__ */ lmap(bifunctorTuple);
 var toUnfoldable9 = /* @__PURE__ */ toUnfoldable3(unfoldableArray);
-var rule6 = function(badModules) {
+var rule7 = function(badModules) {
   return {
     onModule: emptyRule.onModule,
     onModuleExport: emptyRule.onModuleExport,
@@ -32391,7 +32470,7 @@ var codec4 = /* @__PURE__ */ function() {
 }();
 
 // output/Whine.Core.WhineRules/index.js
-var rules3 = [/* @__PURE__ */ ruleFactory("UndesirableModules")(codec4)(rule6), /* @__PURE__ */ ruleFactory("UndesirableFunctions")(codec2)(rule), /* @__PURE__ */ ruleFactory("CommaFirstArrays")(json)(rule3), /* @__PURE__ */ ruleFactory("CommaFirstRecords")(json)(rule4), /* @__PURE__ */ ruleFactory("CaseBranchIndentation")(json)(rule2), /* @__PURE__ */ ruleFactory("FunctionComplexity")(codec3)(rule5)];
+var rules3 = [/* @__PURE__ */ ruleFactory("UndesirableModules")(codec4)(rule7), /* @__PURE__ */ ruleFactory("UndesirableFunctions")(codec2)(rule), /* @__PURE__ */ ruleFactory("CommaFirstArrays")(json)(rule3), /* @__PURE__ */ ruleFactory("CommaFirstRecords")(json)(rule4), /* @__PURE__ */ ruleFactory("CaseBranchIndentation")(json)(rule2), /* @__PURE__ */ ruleFactory("FunctionComplexity")(codec3)(rule5), /* @__PURE__ */ ruleFactory("NoStringComparison")(json)(rule6)];
 
 // output/Effect.Aff/foreign.js
 var Aff = function() {
@@ -50708,10 +50787,10 @@ var argPolicyEq = {
 };
 
 // output/Control.Monad.Reader/index.js
-var unwrap8 = /* @__PURE__ */ unwrap();
+var unwrap9 = /* @__PURE__ */ unwrap();
 var runReader = function(v) {
   return function($4) {
-    return unwrap8(v($4));
+    return unwrap9(v($4));
   };
 };
 
@@ -54061,9 +54140,9 @@ var parseRuleConfigs = function(dictMonadReport) {
           return bind32(commonProp("exclude")(array(nonEmptyString)))(function(exclude) {
             return bind32(mapFlipped15(commonProp("enabled")($$boolean))(fromMaybe(true)))(function(enabled) {
               if (enabled) {
-                return orFail("Malformed config")(mapFlipped10(v.value1(fromMaybe($$null3)(ruleConfig)))(function(rule7) {
+                return orFail("Malformed config")(mapFlipped10(v.value1(fromMaybe($$null3)(ruleConfig)))(function(rule8) {
                   return new Tuple(v.value0, {
-                    rule: rule7,
+                    rule: rule8,
                     globs: {
                       include: fromMaybe([])(include),
                       exclude: fromMaybe([])(exclude)
