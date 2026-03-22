@@ -1,0 +1,15 @@
+name: receive-upstream
+
+on:
+  repository_dispatch:
+    types: [upstream-updated]
+
+jobs:
+  update:
+    uses: Cambridge-Vision-Technology/maintenance/.github/workflows/receive-upstream-update.yml@main
+    with:
+      source-input: ${{ github.event.client_payload.input_name }}
+      auto-merge-upstream: true
+    secrets:
+      AUTO_UPDATE_APP_ID: ${{ secrets.AUTO_UPDATE_APP_ID }}
+      AUTO_UPDATE_APP_PRIVATE_KEY: ${{ secrets.AUTO_UPDATE_APP_PRIVATE_KEY }}
