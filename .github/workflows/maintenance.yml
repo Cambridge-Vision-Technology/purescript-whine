@@ -1,0 +1,19 @@
+name: maintenance
+
+on:
+  schedule:
+    - cron: "0 4 * * 1"
+  workflow_dispatch:
+
+jobs:
+  maintenance:
+    uses: Cambridge-Vision-Technology/maintenance/.github/workflows/workflow.yml@main
+    with:
+      flake-checker: true
+      auto-merge-flake-lock: true
+      update-inputs-separately: true
+      internal-inputs: '["purs-nix"]'
+    secrets:
+      MAINTENANCE_AGE_KEY: ${{ secrets.MAINTENANCE_AGE_KEY }}
+      AUTO_UPDATE_APP_ID: ${{ secrets.AUTO_UPDATE_APP_ID }}
+      AUTO_UPDATE_APP_PRIVATE_KEY: ${{ secrets.AUTO_UPDATE_APP_PRIVATE_KEY }}
